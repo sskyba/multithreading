@@ -42,7 +42,6 @@ public class ThreadController {
       }
     }
     System.out.println("All threads finished, prime numbers found: " + lResult.size());
-    
   }
   
 }

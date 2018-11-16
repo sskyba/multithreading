@@ -11,7 +11,7 @@ class Worker extends Thread {
 
   Worker(String name) {
     threadName = name;
-    System.out.println("Creating " + threadName );
+    System.out.println("Creating " + threadName);
   }
   
   // private function to determine if the given number is prime
@@ -37,7 +37,7 @@ class Worker extends Thread {
     startNumber = nStart;
     endNumber = nEnd;
     run();
-    return this.lResult;
+    return lResult;
   }
 
 }
