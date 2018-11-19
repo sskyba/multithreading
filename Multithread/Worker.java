@@ -23,10 +23,6 @@ class Worker extends Thread {
     return true;
   }
   
-  public ArrayList<Integer> getResults() {
-    return lResults;
-  }
-  
   // Thread body: the prime number finding
   @Override
   public void run() {
