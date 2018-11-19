@@ -4,14 +4,17 @@ import java.util.*;
 
 // Worker class implements a thread with prime numbers finding within the given range
 class Worker extends Thread {
-  private String threadName = "";
-  private int startNumber;
-  private int endNumber;
-  private ArrayList<Integer> lResult = new ArrayList();
+  private final String threadName;
+  private final int startNumber;
+  private final int endNumber;
+  private final ArrayList<Integer> lResults = new ArrayList();
 
-  Worker(String name) {
+  Worker(String name, int nStart, int nEnd) {
+    startNumber = nStart;
+    endNumber = nEnd;
     threadName = name;
-    System.out.println("Creating " + threadName);
+    System.out.println("New thread: " + threadName);
+    this.start();
   }
   
   // private function to determine if the given number is prime
@@ -20,24 +23,22 @@ class Worker extends Thread {
     return true;
   }
   
+  public ArrayList<Integer> getResults() {
+    return lResults;
+  }
+  
   // Thread body: the prime number finding
   @Override
   public void run() {
-    System.out.println("Running " + threadName );
     for (int i=startNumber; i<=endNumber; i++) {
       if (isPrimeNumber(i)) {
-        System.out.println("Thread " + this.getName() + " adding number " + i);
-        lResult.add(i);
+// uncomment the next line to view all the numbers added
+//        System.out.println("Thread " + threadName + " adding number " + i);
+        lResults.add(i);
       }
     }
-   }
-  
-  // main method to initialize the thread and start running 
-  public ArrayList<Integer> start(int nStart, int nEnd) {
-    startNumber = nStart;
-    endNumber = nEnd;
-    run();
-    return lResult;
+    ThreadController.addResults(lResults); 
+    System.out.println(threadName + " exiting, added " + lResults.size() + " numbers to the result");
   }
 
 }

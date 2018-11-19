@@ -18,30 +18,38 @@ public class ThreadController {
   static final int nThreadMax = 3;
   
   // list of prime numbers (end result of the app)
-  static ArrayList<Integer> lResult = new ArrayList();
+  static ArrayList<Integer> lResults = new ArrayList();
   
   // list of threads
   static ArrayList<Worker> lThreads = new ArrayList();
 
   // checks if all the threads are finished
   private static boolean allThreadsFinished() {
-    for (int i=0; i<nThreadMax; i++) if (lThreads.get(i).isAlive()) return false;
+    for (int i=0; i<nThreadMax; i++) if ((lThreads.size()>i) && lThreads.get(i).isAlive()) return false;
     return true;
+  }
+  
+  public static void addResults(ArrayList<Integer> l) {
+    lResults.addAll(l);
   }
 
   public static void main(String args[]) {
-    // initializing lThreads array: creating all the threads up to the max (nThreadMax value)
-    for (int i=0; i<nThreadMax; i++) lThreads.add(i, new Worker("Thread-"+i));
     
     while ((nNumberCount<nMaxNumber) && allThreadsFinished()) {
       for (int i=0; i<nThreadMax; i++) {
-        if (!lThreads.get(i).isAlive() && (nNumberCount<nMaxNumber)) { 
-          lResult.addAll(lThreads.get(i).start(nNumberCount+1, nNumberCount+nStep)); 
+        if ((nNumberCount<nMaxNumber) && ((lThreads.size()<=i) || !lThreads.get(i).isAlive())) { 
+          // initiate a new thread and push it to the pool
+          lThreads.add(i, new Worker("Thread-"+i, nNumberCount+1, nNumberCount+nStep));
           nNumberCount += nStep; 
         }
       }
+      try {
+        for (int i=0; i<nThreadMax; i++) {
+          lThreads.get(i).join();
+        }
+      } catch(InterruptedException e) { System.err.println("Thread interrupted, error message: " + e.getMessage()); }
     }
-    System.out.println("All threads finished, prime numbers found: " + lResult.size());
+    System.out.println("All threads finished, prime numbers found: " + lResults.size());
   }
   
 }
